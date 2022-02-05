@@ -10,4 +10,4 @@
 - val dispatchReceiver = parentAsClass.thisReceiver!!.copyTo(constructor)
 + val dispatchReceiver = parentAsClass.thisReceiver!!
 ```
-原因为 JVM 字节码中的 `this` 在构造函数中是直接访问的，而在常规函数中将会为 `this` 创建一个临时变量，因此 `IrConstructor.body` 中不需要使用 [IrValueParameter.copyTo](https://github.com/JetBrains/kotlin/blob/1.6.20/compiler/ir/backend.common/src/org/jetbrains/kotlin/backend/common/ir/IrUtils.kt#L113) 来复制 `class.thisReceiver`
+原因为 JVM 字节码中的 `this` 在构造函数中是直接访问的，而在常规函数中将会为 `this` 创建一个临时变量，因此 `IrConstructor.body` 中不需要使用 [IrValueParameter.copyTo](https://github.com/JetBrains/kotlin/blob/1.6.20/compiler/ir/backend.common/src/org/jetbrains/kotlin/backend/common/ir/IrUtils.kt#L113) 来复制 `class.thisReceiver`。（浪费了俩小时🤬西内！！！！）

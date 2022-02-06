@@ -39,9 +39,9 @@
 <details><summary><b>解决方式</b></summary>
 
 ```diff
-- addConstructor(origin = IrDeclarationOriginImpl("SYNTHETIC_DECLARATION", isSynthetic = true))
-+ addConstructor(origin = IrDeclarationOriginImpl("SYNTHETIC_DECLARATION", isSynthetic = false))
+- addConstructor { visibility = PRIVATE }
++ addConstructor { visibility = PUBLIC }
 ```
-原因为带有合成 `origin` 的构造函数会从 `constructor(p0: kotlin.String)` 转换为 `($this: <root>.MyClass, p0: kotlin.String, $constructor_marker: kotlin.jvm.internal.DefaultConstructorMarker?)`，因此创建构造函数时 `origin` 的 `isSynthetic` 参数不能设置为 `true`
+原因为可见性为 **private** 的构造函数 `constructor(p0: kotlin.String)` 会被 **lowering** 阶段转换为 `($this: <root>.MyClass, p0: kotlin.String, $constructor_marker: kotlin.jvm.internal.DefaultConstructorMarker?)`，所以想要简单地在 `companion object` 中通过 `IrConstructorCall` 调用新创建的 `private` 构造函数是不行的，必须模仿 KCP 默认的 lowering 流程来调用 fake constructor 才行。因此最简单的解决方法是不要将构造函数设置为 `private`（浪费了十几分钟🤬西内！！！！）
 
 </details><br/>
